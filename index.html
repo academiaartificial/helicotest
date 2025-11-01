@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelicoTest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-[#eeeeee]">
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-[#eeeeee] px-6">
+            <div class="max-w-5xl mx-auto flex justify-between items-center" style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), center center;">
+               
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-hands-holding-heart text-red-500 text-2xl"></i>
+                    <div>
+                        <p id="nav-toggler">
+                            <a href="#" @click="toggleMenu" class="hide-nav" id="toggle-nav" :title="isMenuVisible ? 'Ocultar menú' : 'Mostrar menú'">
+                                <span>{{ isMenuVisible ? 'Menú' : 'menú' }}</span>
+                            </a>
+                        </p>
+                        <h1 class="text-xs font-NORMAL text-white py-2" style="font-size: 14pt;">Aritmética Primero</h1>
+                        <p class="text-2xl font-bold text-white pb-3">{{ currentPageTitle }}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-bell text-gray-600"></i>
+                    </button>
+                    
+                </div>
+            </div>
+        </header>
+
+        <!-- Overlay para cerrar menú en móviles -->
+        <div class="overlay" :class="{ 'active': isMenuOpen }" @click="closeMenu"></div>
+
+        <!-- Main Layout -->
+        <div class="flex flex-1 max-w-5xl mx-auto w-full bg-[#eeeeee]">
+            <!-- Sidebar Menu -->
+            <aside class="siteNav" :class="{ 'hidden': !isMenuVisible, 'active': isMenuOpen }">
+                <nav class="space-y-0 px-0">
+                    <div v-for="item in menuItems" :key="item.id">
+                        <!-- Elemento de menú principal -->
+                        <a 
+                            href="#" 
+                            @click.prevent="selectMenuItem(item)"
+                            :class="[
+                                'flex items-center px-0 py-0 text-sm transition-colors menu-item',
+                                activeMenu === item.id || isSubmenuActive(item.id)
+                                    ? 'active-menu' 
+                                    : 'text-gray-950 hover:bg-gray-300'
+                            ]"
+                        >
+                            <i :class="['mr-1', item.icon]"></i>
+                            <span>{{ item.name }}</span>
+                        </a>
+                        
+                        <!-- Submenú -->
+                        <div 
+                            v-if="item.submenu && item.submenu.length > 0"
+                            class="submenu ml-2"
+                            :class="{ 'open': isSubmenuOpen(item.id) }"
+                        >
+                            <a 
+                                v-for="subItem in item.submenu"
+                                :key="subItem.id"
+                                href="#" 
+                                @click.prevent="selectMenuItem(subItem)"
+                                :class="[
+                                    'flex items-center px-0 py-0 text-sm transition-colors menu-item submenu-item',
+                                    activeMenu === subItem.id 
+                                        ? 'active-menu' 
+                                        : 'text-gray-950 hover:bg-gray-300'
+                                ]"
+                            >
+                                <i :class="['mr-1', subItem.icon]"></i>
+                                <span>{{ subItem.name }}</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-8 bg-white">
+                <div class="content-transition" :style="{ opacity: contentOpacity }">
+                    
+                    <!-- Inicio Content -->
+                    <div v-if="activeMenu === 'inicio'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="iDevice emphasis0">
+                                <div id="ta0_132_2" class="block iDevice_content" style="display:block;">
+                                    <div class="exe-text">
+                                        <h1 class="text-3xl text-black font-semibold mb-2.5">Presentación</h1>
+                                        <h2 class="/6 text-gray-900 mt-5 mb-5 font-semibold">Estimado estudiante</h2>
+                                        <p>
+                                            <img src="https://crea-portaldemedios.siemens-stiftung.org/apps/tejiendo-la-diversidad/_dd78278b-1ce8-4b45-a06b-932c22cae548.jpeg" 
+                                                alt="Niños en paza de latinomaerica " title="Violencia sexual" width="348" height="348" style="float: right; margin: 12px 15px 12px 15px;">     
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           Nos complace poner en tus manos el material y recursos educativo digital, que, estamos seguros, te ayudará a descubrir la presencia de la matemática en la vida cotidiana
+                                           y a utilizarla de manera adecuada y creativa en la resolución de problemas vinculados a la realidad.
+                                        </p>
+                                        
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            En su estructura, te proponemos algunos ejemplos de estrategias heurísticas para que las puedas emplear en cada uno de los capítulos, las cuales se encuentran organizadas en tres
+                                            secciones: <span class="italic">Construimos nuestros aprendizajes, Comprobamos nuestros aprendizajes y Evaluamos nuestros aprendizajes.</span>
+                                        </p>
+                                        
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Finalmente, puedes desglosar las fichas para desarrollarlas y organizarlas en tu portafolio, de manera que tu docente te brinde retroalimentación u orientación para que puedas seguir mejorando.
+                                        </p>
+                                        
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Esperamos que con esta experiencia sientas que hacer matemática es un reto posible de alcanzar. Disfrútala.
+                                        </p>
+
+                                                                            
+                                        <p class="mb-4 mt-4 text-base/5">&nbsp;</p>
+                                        
+                                        <p class="mb-4 mt-4 text-base/5">A continuación, le presentamos un video sobre los tipos de violencia que existen en el aula.</p>
+                                        
+                                        <figure class="exe-figure exe-media position-center text-center license-CC-BY-SA my-10" style="width: 560px;">
+                                            <div class="figcaption header font-bold text-lg mb-2.5 mt-4">
+                                                <strong>TIPOS DE VIOLENCIA EN LA ESCUELA</strong>
+                                            </div>
+                                            <div class="iframe-container">
+                                                <iframe width="560" height="315" src="https://www.youtube.com/embed/AH3cBS-QsOM?si=ovrOV19m_AU-iTiv" 
+                                                        title="Video sobre tipos de violencia en la escuela" 
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                        allowfullscreen></iframe>
+                                            </div>
+                                            <figcaption class="figcaption text-gray-600 text-sm mt-1.25">
+                                                <a href="https://www.unesco.org/en" target="_blank" class="author" rel="noopener">UNESCO</a>. 
+                                                <em>Forma de violencia UNESCO</em> 
+                                                <span class="license">
+                                                    <span class="sep">(</span>
+                                                    <a href="http://creativecommons.org/licenses/?lang=es" rel="license nofollow noopener" target="_blank" title="Creative Commons BY-SA">CC BY-SA</a>
+                                                    <span class="sep">&nbsp;)</span>
+                                                </span>
+                                            </figcaption>
+                                        </figure>
+                                        
+                                        <p class="mb-3.75">&nbsp;</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    
+                        <!-- Metas de aprendizaje -->
+                        <article class="iDevice_wrapper textIdevice em_iDevice mb-7.5" id="id61">
+                            <div class="iDevice emphasis1">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle font-bold relative -top-4.5 align-top">
+                                        Metas de aprendizaje:
+                                    </h1>
+                                </header>
+                                <div class="iDevice_inner">
+                                    <div class="iDevice_content_wrapper">
+                                        <div id="ta61_127_2" class="block iDevice_content">
+                                            <div class="exe-text">
+                                                <ul class="list-disc pl-5 mb-3.75 text-base/5">
+                                                    <li class="mb-2.5 pb-4">
+                                                        <p><strong class="text-gray-900">Comprender conceptos clave:</strong> Los estudiantes identificarán y explicarán los conceptos fundamentales de violencia sexual, igualdad de género e inclusión, reconociendo su impacto en diferentes contextos sociales.</p>
+                                                    </li>
+                                                    <li class="mb-2.5 pb-4">
+                                                        <p><strong class="text-gray-900">Aplicar la metodología STEM:</strong> Utilizarán principios de ciencia, tecnología, ingeniería y matemáticas para investigar problemas relacionados con la violencia sexual y las desigualdades de género.</p>
+                                                    </li>
+                                                    <li class="mb-2.5 pb-4">
+                                                        <p><strong class="text-gray-900">Desarrollar pensamiento crítico:</strong> Analizarán datos y situaciones vinculadas a la desigualdad de género y la violencia sexual, evaluando causas, consecuencias y posibles soluciones.</p>
+                                                    </li>
+                                                    <li class="mb-2.5 pb-4">
+                                                        <p><strong class="text-gray-900">Proponer soluciones innovadoras:</strong> Diseñarán y presentarán propuestas que utilicen herramientas STEM para promover entornos seguros, equitativos e inclusivos en sus comunidades escolares y sociales.</p>
+                                                    </li>
+                                                    <li class="mb-2.5 pb-4">
+                                                        <p><strong class="text-gray-900">Fomentar valores de respeto y empatía:</strong> Demostrarán actitudes de respeto, empatía y responsabilidad al abordar problemáticas de género y violencia, promoviendo la acción informada en su entorno.</p>
+                                                    </li>
+                                                    <li class="mb-2.5 pb-4">
+                                                        <p><strong class="text-gray-950">Reflexionar sobre el impacto social:</strong> Evaluarán cómo sus acciones y soluciones pueden contribuir a la creación de comunidades más justas e inclusivas, tanto a nivel local como global.</p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- STEM Content -->
+                    <div v-if="activeMenu === 'stem'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Objetivo general:
+                                        </h1>
+                                </header>
+                                <div class="exe-text">
+                                    <p>
+                                        <img src="https://crea-portaldemedios.siemens-stiftung.org/apps/tejiendo-la-diversidad/_1539ca3d-9a5a-4881-b355-a4a84713101e.jpeg" 
+                                            alt="Niños en paza de latinomaerica " title="Violencia sexual" width="281" height="281" style="font-size: 1.05em; float: right; margin-right: 12px; margin-left: 12px;">     
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            <span class="font-semibold">
+                                                Desarrollar en el estudiantado una comprensión integral de la violencia sexual, la igualdad de género y la inclusión,</span> utilizando la metodología STEM para analizar, investigar y proponer soluciones innovadoras que promuevan un entorno seguro, equitativo e inclusivo.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            A través de este recurso, cada estudiante aprenderá a identificar y abordar problemas relacionados con la violencia sexual y las desigualdades de género, aplicando principios científicos, tecnológicos, de ingeniería y matemáticos para fomentar el respeto, la empatía y la acción informada en sus comunidades escolares y más allá.
+                                        </p>
+                                </div>       
+                            
+                            </div>
+                            <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Objetivos específicos
+                                    </h1>
+                            </header>
+                            <div class="faq-container">
+                                <div v-for="(faq, index) in faqs" :key="faq.id" class="faq-item">
+                                    <button
+                                        @click="toggleFaqItem(faq.id)"
+                                        :class="['faq-button', expandedFaqItem === faq.id ? 'active' : '']"
+                                    >
+                                        <span class="font-medium text-sm">{{ faq.title }}</span>
+                                        <i class="faq-icon fas fa-chevron-down"></i>
+                                    </button>
+                                    
+                                    <div
+                                        class="faq-content"
+                                        :class="expandedFaqItem === faq.id ? 'max-h-96' : 'max-h-0'"
+                                    >
+                                        <div class="faq-content-inner">
+                                            <p class="text-gray-700">
+                                                {{ faq.content }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                    
+                        </article>
+                    </div>
+
+                    <!-- Recursos Content -->
+                    <div v-if="activeMenu === 'recursos'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Introducción
+                                        </h1>
+                                </header>
+                                <div class="exe-text">
+                                    <p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            <span class="font-semibold">
+                                            Presentamos un recurso educativo abierto</span> diseñado específicamente para abordar temas de 
+                                            <span class="font-semibold">
+                                            violencia sexual, igualdad de género y diversidad,</span> con un enfoque inclusivo.
+                                        </p>
+                                        <img src="https://crea-portaldemedios.siemens-stiftung.org/apps/tejiendo-la-diversidad/_3dfd9c46-9ebe-4660-874b-c3463866861c.jpeg" 
+                                            alt="Niños en paza de latinomaerica " title="Violencia sexual" width="378" height="378" style="float: right; margin: 11px 12px 11px 12px;">     
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            <span class="font-semibold">
+                                                Este recurso se estructura en cuatro secciones de aprendizaje, cada una basada en las siglas STEM (Ciencia, Tecnología, Ingeniería y Matemática).
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5" style="padding-left: 30px;">A lo largo de estas secciones, sus estudiantes <strong>desarrollarán competencias clave</strong> en cada área y culminarán su aprendizaje con un <strong>proyecto integrador</strong> que afiance su comprensión y aplicación del pensamiento STEM.</p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Además, este recurso es altamente flexible y se puede adaptar a cualquier sistema metodológico del aula.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5" style="padding-left: 30px;">A lo largo de estas secciones, sus estudiantes <strong>desarrollarán competencias clave</strong> en cada área y culminarán su aprendizaje con un <strong>proyecto integrador</strong> que afiance su comprensión y aplicación del pensamiento STEM.</p>
+                                        <p class="mb-4 mt-4 text-base/5" style="padding-left: 30px;">Como herramienta didáctica, está diseñada para ser utilizada de manera <strong>dinámica y creativa</strong>, según las necesidades y preferencias de cada docente y de sus estudiantes.</p>
+                                    
+                                    </div>       
+                                
+                            </div>
+                                                                            
+                        </article>
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Igualdad de género
+                                        </h1>
+                                </header>
+                                <div class="iDevice_inner">
+                                    <div class="iDevice_content_wrapper">
+                                        <div id="ta47_143_2" class="block iDevice_content">
+                                            <div class="exe-text">
+                                                <div style="width: 92%; margin: 15px 0; padding: 15px 4%; background: linear-gradient(to top, #00a79d 0%, #590150 100%);">
+                                                    <p><span style="color: #ffcc00;">La <strong>igualdad de género</strong> y el <strong>empoderamiento de niñas y mujeres</strong> en los campos de la <strong>ciencia, tecnología, ingeniería y matemática (STEM)</strong> son fundamentales para construir una sociedad más <strong>justa y próspera</strong>.</span></p>
+                                                    <p><span style="color: #ffffff;">La <strong>participación equitativa de mujeres en STEM</strong> no solo abre puertas a <strong>oportunidades educativas y laborales</strong>, sino que también <strong>enriquece estos campos</strong> con diversas <strong>perspectivas e innovaciones</strong>.</span></p>
+                                                    <p><span style="color: #ffffff;"><strong>Fomentar la inclusión</strong> de mujeres y niñas en proyectos STEM es esencial para <strong>romper estereotipos de género</strong>, <strong>reducir la brecha de género</strong> en el mercado laboral y <strong>potenciar el desarrollo económico y social</strong> a escala global.</span></p>
+                                                    <p><span style="color: #ffffff;">En definitiva, <strong>avanzar hacia la igualdad de género en STEM</strong> no es solo una cuestión de <strong>justicia social</strong>, sino también un <strong>imperativo para el progreso y la sostenibilidad</strong> de nuestras sociedades.</span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </article>
+
+
+
+                    </div>
+
+                    <!-- Section1 Content -->
+                    <div v-if="activeMenu === 'capitulo1'" class="max-w-4xl">
+                        
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            "Hostigamiento y acoso sexual: ¡Conoce y actúa!"
+                                        </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            <strong>
+                                            En la sección 1, se invita a jóvenes de entre 12 y 15 años a explorar y abordar temas relacionados con la comprensión y la acción frente a situaciones de hostigamiento y acoso sexual.
+                                            </strong>    
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Se promueve el compartir lo aprendido de manera digital, enriqueciendo la experiencia educativa y empoderando a quienes participan para la prevención y la acción contra el hostigamiento y acoso sexual.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            A continuación se presenta un video donde se describe la importancia de la educación sexual.
+                                        </p>
+                                    <figure class="exe-figure exe-media position-center text-center license-CC-BY-SA my-10" style="width: 560px;">
+                                        <div class="figcaption header font-bold text-lg mb-2.5 mt-4">
+                                            <strong>TIPOS DE VIOLENCIA EN LA ESCUELA</strong>
+                                        </div>
+                                        <div class="iframe-container">
+                                            <iframe width="560" height="315" src="https://www.youtube.com/embed/AH3cBS-QsOM?si=ovrOV19m_AU-iTiv" 
+                                                    title="Video sobre tipos de violencia en la escuela" 
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                    allowfullscreen></iframe>
+                                        </div>
+                                        <figcaption class="figcaption text-gray-600 text-sm mt-1.25">
+                                            <a href="https://www.unesco.org/en" target="_blank" class="author" rel="noopener">UNESCO</a>. 
+                                            <em>Forma de violencia UNESCO</em> 
+                                            <span class="license">
+                                                <span class="sep">(</span>
+                                                <a href="http://creativecommons.org/licenses/?lang=es" rel="license nofollow noopener" target="_blank" title="Creative Commons BY-SA">CC BY-SA</a>
+                                                <span class="sep">&nbsp;)</span>
+                                            </span>
+                                        </figcaption>
+                                    </figure>    
+                                        
+                                    
+                                    </div>       
+                                
+                            </div>
+                            <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Objetivo
+                                        </h1>
+                                </header>
+                                                
+                        </article>
+                        
+                    </div>
+
+                    <!-- Tarea 1 Content -->
+                    <div v-if="activeMenu === 'tarea1'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Familias Diferentes
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Tarea 2 Content -->
+                    <div v-if="activeMenu === 'tarea2'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 2: Investigación sobre diversidad
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Tarea 3 Content -->
+                    <div v-if="activeMenu === 'tarea3'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 3: Creación de material educativo
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Section2 Content -->
+                     <section v-if="activeMenu === 'seccion2'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Objetivo
+                                        </h1>
+                                </header>
+                                <div class="exe-text">
+                                    <p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            <span class="font-semibold">
+                                            La sección 2. "Celebrando la Diversidad" invita a explorar la complejidad de la diversidad en múltiples facetas.
+                                        </p>
+                                        <img src="https://crea-portaldemedios.siemens-stiftung.org/apps/tejiendo-la-diversidad/_4cab7cc8-1a01-43dd-a252-c85ee08c1112.jpeg" 
+                                            alt="Niños en paza de latinomaerica " title="Violencia sexual" width="378" height="378" style="float: right; margin: 11px 12px 11px 12px;">     
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Comenzando con la diversidad étnica en Colombia, reconocen la riqueza cultural del país a través de imágenes representativas.
+                                        </p>
+                                        
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Luego, se sumergen en la variedad en la naturaleza, comprendiendo los diferentes tipos de reproducción y su impacto en la biodiversidad.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Finalmente, reflexionan sobre la diversidad en la sexualidad humana, promoviendo el respeto por cada individuo y la celebración de la diferencia en un ambiente inclusivo y comprensivo.
+                                        </p>
+                                        <p class="mb-4 mt-4">
+                                           <strong class="text-xl text-base/3">Esta sección busca fomentar la apreciación de la diversidad en todas sus formas y promover el respeto mutuo entre el estudiantado.</strong>
+                                        </p>
+                                    
+                                    </div>       
+                                
+                            </div>
+                            <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Objetivos específicos
+                                        </h1>
+                            </header>
+                                                
+                        </article>
+                    </section>
+                    <!-- Tarea2 1 Content -->
+                    <div v-if="activeMenu === 'tarea2_1'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 1: Análisis de Casos
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Tarea2 2 Content -->
+                    <div v-if="activeMenu === 'tarea2_2'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 2: Investigación sobre diversidad
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                 </div>    
+                             </div>
+                         </article>
+                    </div>
+                    <!-- Tarea3 1 Content -->
+                    <div v-if="activeMenu === 'tarea2_3'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 3: Creación de material educativo
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+
+
+                     <!-- Section 3 -->
+                    <section v-if="activeMenu === 'seccion3'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Objetivo
+                                        </h1>
+                                </header>
+                                <div class="exe-text">
+                                    <p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            <span class="font-semibold">
+                                            Desarrollar en el estudiantado una comprensión integral de la violencia sexual, la igualdad de género y la inclusión, utilizando el enfoque STEM para analizar, investigar y proponer soluciones innovadoras que promuevan un entorno seguro, equitativo e inclusivo.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            A través de este curso, aprenderán a identificar y abordar problemas relacionados con la violencia sexual y las desigualdades de género, aplicando principios científicos, tecnológicos, de ingeniería y matemáticos para fomentar el respeto, la empatía y la acción informada en sus comunidades escolares y más allá.
+                                        </p>
+                                        <img src="https://crea-portaldemedios.siemens-stiftung.org/apps/tejiendo-la-diversidad/_f6d6157a-e66b-4c49-8424-165e6d664833.jpeg" 
+                                            alt="Niños en paza de latinomaerica " title="Violencia sexual" width="500" height="500" style="margin-right: auto; margin-left: auto; display: block;">     
+                                        </p>
+                                                                    
+                                                                              
+                                    
+                                    </div>       
+                                
+                            </div>
+                        </article>
+                    </section> 
+
+                    <!-- Tarea3 1 Content -->
+                    <div v-if="activeMenu === 'tarea3_1'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 1: Análisis de Casos
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Tarea3 2 Content -->
+                    <div v-if="activeMenu === 'tarea3_2'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 2: Análisis de Casos
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Tarea3 3 Content -->
+                    <div v-if="activeMenu === 'tarea3_3'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 3: Creación de material educativo
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Section 4 -->
+                    <section v-if="activeMenu === 'seccion4'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                        <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                            Explorando la diversidad de género a través de los datos
+                                        </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            <span class="font-semibold">
+                                            Desarrollar en el estudiantado una comprensión integral de la violencia sexual, la igualdad de género y la inclusión, utilizando el enfoque STEM para analizar, investigar y proponer soluciones innovadoras que promuevan un entorno seguro, equitativo e inclusivo.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            A través de este curso, aprenderán a identificar y abordar problemas relacionados con la violencia sexual y las desigualdades de género, aplicando principios científicos, tecnológicos, de ingeniería y matemáticos para fomentar el respeto, la empatía y la acción informada en sus comunidades escolares y más allá.
+                                        </p>
+                                        <p>
+                                        <img src="https://crea-portaldemedios.siemens-stiftung.org/apps/tejiendo-la-diversidad/_f6d6157a-e66b-4c49-8424-165e6d664833.jpeg" 
+                                            alt="Niños en paza de latinomaerica " title="Violencia sexual" width="500" height="500" style="margin-right: auto; margin-left: auto; display: block;">     
+                                        </p>
+                                                                    
+                                                                              
+                                    
+                                </div>       
+                                
+                            </div>
+                        </article>
+                    </section> 
+                    <!-- Tarea4 1 Content -->
+                    <div v-if="activeMenu === 'tarea4_1'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 1: Análisis de Casos
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://view.genially.com/666312b800256e00149f1631">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="395" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://view.genially.com/666312b800256e00149f1631" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Tarea4 2 Content -->
+                    <div v-if="activeMenu === 'tarea4_2'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 1: Análisis de Casos
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Tarea4 3 Content -->
+                    <div v-if="activeMenu === 'tarea4_3'" class="max-w-4xl">
+                        <article class="iDevice_wrapper textIdevice mb-7.5" id="id0">
+                            <div class="mb-8">
+                                <header class="iDevice_header iDevice_header_noIcon mb-3.75">
+                                    <h1 class="iDeviceTitle text-xl font-bold relative -top-4.5 align-top">
+                                        Tarea 3: Análisis de Casos
+                                    </h1>
+                                </header>
+                                <div class="exe-text">
+                                    
+                                        <p>
+                                            <span style="font-size: 14pt;">
+                                                Ahora&nbsp;vamos a explorar algo igual de especial:<strong> nuestras diferentes familias.</strong> 
+                                            </span>
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                            Cada una es única y hermosa a su manera.
+                                        </p>
+                                        <p class="mb-4 mt-4 text-base/5">
+                                           <br>Presentamos:<br>
+                                           <span style="font-size: 18pt;">¿Somos diferentes por la familia de la que venimos?</span>
+                                        </p>
+                                        <p class="mb-4 mt-4"><span style="font-size: 14pt;">Repasa los tipos de familia... juguemos:</span></p>
+                                        <p style="text-align: center;">
+                                            <span style="font-size: 14pt;">
+                                                <span class="external-iframe-src" style="display:none">
+                                                    <a href="https://es.educaplay.com/juego/8513909-tipos_de_familia.html">
+                                                        https://es.educaplay.com/juego/8513909-tipos_de_familia.html
+                                                    </a>
+                                                </span>
+                                                <iframe width="695" height="710" allow="fullscreen; autoplay;" allowfullscreen="allowfullscreen" frameborder="0" 
+                                                    src="https://es.educaplay.com/juego/8513909-tipos_de_familia.html" 
+                                                    class="external-iframe">
+                                                </iframe>
+                                            </span>
+                                        </p>         
+                                        
+                                    
+                                </div>    
+                            </div>
+                        </article>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div> 
+<script src="app.js"></script>
+
+</body>
+</html>   
